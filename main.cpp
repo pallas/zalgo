@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <vector>
+#include <ctime>
 
 bool g_hasSetDirection = false;
 bool g_fuckUpGoingUp = false;
@@ -71,11 +72,12 @@ void parseCommandLine(int argc, char** argv)
 			{ "middle",   no_argument,       0, 'm' },
 			{ "down",     no_argument,       0, 'd' },
 			{ "strength", required_argument, 0, 's' },
+			{ "seed",     no_argument,       0, 't' },
 			{ 0, 0, 0, 0 }
 		};
 
 		int option_index = 0;
-		const int c = getopt_long(argc, argv, "umds:", long_options, &option_index);
+		const int c = getopt_long(argc, argv, "umds:t:", long_options, &option_index);
 
 		if (c == -1)
 			break;
@@ -86,6 +88,10 @@ void parseCommandLine(int argc, char** argv)
 			case 'd': { g_fuckUpGoingDown = true; g_hasSetDirection = true; break; }
 			case 's': {
 				g_strength = std::max(std::min(atoi(optarg), 3), 0);
+				break;
+			}
+			case 't': {
+				srand(atoi(optarg));
 				break;
 			}
 		}
@@ -102,6 +108,7 @@ void parseCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
+	srand(time(NULL));
 	parseCommandLine(argc, argv);
 
 	int c;
